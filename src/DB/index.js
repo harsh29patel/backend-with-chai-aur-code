@@ -1,3 +1,6 @@
+   // link to http crash course
+   // https://www.linkedin.com/posts/hiteshchoudhary_http-crash-course-notes-activity-7130464152002658304-52df?utm_source=share&utm_medium=member_desktop
+
 import mongoose from "mongoose";
 import { DB_NAME } from "../constants.js";
 
