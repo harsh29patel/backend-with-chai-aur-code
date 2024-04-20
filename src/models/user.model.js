@@ -34,7 +34,7 @@ const userSchema = new  Schema({
     },
     watchHistory:[
         {
-            type: Schema.Types.ObjectIdjectID,
+            type: Schema.Types.ObjectId,
             ref:"Video"
         }
     ],
@@ -51,7 +51,7 @@ const userSchema = new  Schema({
 
 userSchema.pre("save", async function (next) {
     if(!this.isModified("password")) return next();  // look at  syntax
-    this.password = bcrypt.hash(this.password,10)  //number for how many rounds
+    this.password = await bcrypt.hash(this.password,10)  //number for how many rounds
     next()
 })
 
@@ -83,4 +83,4 @@ process.env.REFRESH_TOKEN_SECRET,
 )
 }
 
-export const User = mongoose.model('User',userSchema)
+export const User = mongoose.model("User",userSchema)
