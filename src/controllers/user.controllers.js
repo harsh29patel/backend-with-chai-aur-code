@@ -15,19 +15,20 @@ const registerUser = asyncHandler(async(req , res)=>{
    // return res
 
 
-      const {fullname , email ,password , username}= req.body
+      const {fullname , email ,password , username}= req.body  // user details
     console.log("email:",email);
+    // console.log(req.body);  //just for knowledge
 
     // if(fullname===""){
     //     throw new  ApiError(400,"fullname is required")
     // }
     if(
-        [fullname,email,password,username].some((field)=>field?.trim() === "")
+        [fullname,email,password,username].some((field)=>field?.trim() === "") // validation
     )
     {
         throw new ApiError(400,"all fields are required")
     }   
-const existedUserUser = await User.findOne({
+const existedUserUser = await User.findOne({    //check if user is already registered or not
     $or: [{username} , {email}]
 })
 
@@ -35,40 +36,46 @@ if(existedUserUser){
     throw new ApiError(409 ,"User with email or Username already")
 }
 
-const avatarLocalPath=req.files?.avatar[0]?.path // remember the way of getting image from multer 
- const coverImageLocalPath=req.files?.coverImage[0]?.path
+ const avatarLocalPath=req.files?.avatar[0]?.path // remember the way of getting image from multer 
+//  const coverImageLocalPath=req.files?.coverImage[0]?.path;
+ let coverImageLocalPath;
+ if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+    coverImageLocalPath = req.files.coverImage[0].path
+ }
 
-if (!avatarLocalPath) {
+//  console.log(req.files); // just for knowledge
+
+if (!avatarLocalPath) {                             //chechk avatar image
     throw new ApiError(400,"avatar is required")
 }
 
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
+    const avatar = await uploadOnCloudinary(avatarLocalPath)      // upload in cloudinary
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     if(!avatar){
         throw new ApiError(400,"avatar is required")
-    }
+    } 
     
-     const user = await User.create({
+     const user = await User.create({     // create user object
         fullname,
         avatar: avatar.url,
-        coverImage: coverImage?.url || "" ,// because coverImage may have may not have
+        coverImage: coverImage?.url || "", // because coverImage may have may not have
         email,
         password,
         username : username.toLowerCase()
     })
 
      const createdUser = await User.findById(user._id).select(
-        "-password -refreshToken"
+        "-password -refreshToken"     // remove password and refresh token
      )
 
      if(!createdUser){
-        throw new ApiError(500,"Something went wrong while registering the user")
+        throw new ApiError(500,"Something went wrong while registering the user")   // chechking for user creation
      }
 
 
      return res.status(201).json(
-        new ApiResponse(200,createdUser,"User registered successfully")
+        new ApiResponse(200,createdUser,"User registered successfully")  // return response
      )
 
 
