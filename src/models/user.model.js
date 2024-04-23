@@ -68,11 +68,11 @@ userSchema.method.generateAccessToken=function(){      // arrow function method 
     },
 process.env.ACCESS_TOKEN_SECRET,
 {
-    expiresIn:process.env.ACCESS_TOKEN_EXPIRY
-}
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+}  
 )
 }
-userSchema.method.generateReferenceToken=function(){
+userSchema.method.generateRefreshToken=function(){
     return jwt.sign({
         _id: this._id
     },
