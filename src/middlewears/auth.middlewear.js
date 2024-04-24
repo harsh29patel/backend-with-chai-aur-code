@@ -8,7 +8,7 @@ import { User } from "../models/user.model.js";
   export const verifyJWT = asyncHandler(async(req,_,next)=>{   // "_" in place of res because it is not being used 
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer " , "")  
-        if(!token){           // ? is optional
+        if(!token){           // ?  meanig is optional
             throw new ApiError(401,"UnAuthorized request")
         }  
     
